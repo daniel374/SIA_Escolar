@@ -11,3 +11,7 @@ workon sia_escolar
 
 ### Instalar requerimientos:
 pip install -r requirements.txt
+
+
+
+##Instalación BD:
