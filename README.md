@@ -1,4 +1,4 @@
-"# SIA_Escolar" 
+### SIA_Escolar" 
 
 ## Prerequisitos:
 ### instalar virtualenvwrapper
@@ -14,4 +14,4 @@ pip install -r requirements.txt
 
 
 
-##Instalación BD:
+### Instalación BD:
