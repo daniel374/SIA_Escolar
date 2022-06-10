@@ -15,3 +15,8 @@ pip install -r requirements.txt
 
 
 ### Instalación BD:
+Inicialmente trabajaremos Mysql por facilidad mientras el diseño inicial, para luego migrar a un PosgreSQL mucho más robusto.
+
+se recomienda instalar https://www.mysql.com/products/workbench/
+
+- Se puede visualizar el modelo Relational_model_sia y crear la BD con el script Relational_model_sia.sql
