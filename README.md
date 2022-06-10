@@ -1,4 +1,4 @@
-### SIA_Escolar" 
+# SIA_Escolar
 
 ## Prerequisitos:
 ### instalar virtualenvwrapper
