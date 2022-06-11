@@ -19,4 +19,4 @@ Inicialmente trabajaremos Mysql por facilidad mientras el diseño inicial, para 
 
 se recomienda instalar https://www.mysql.com/products/workbench/
 
-- Se puede visualizar el modelo Relational_model_sia y crear la BD con el script--> Script_sia_BD.sql.sql
+- Se puede visualizar el modelo Relational_model_sia y crear la BD con el script  -->  Script_sia_BD.sql.sql
