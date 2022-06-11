@@ -80,6 +80,18 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `schoolsia`.`student_state`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `schoolsia`.`student_state` ;
+
+CREATE TABLE IF NOT EXISTS `schoolsia`.`student_state` (
+  `stust_id` VARCHAR(2) NOT NULL,
+  `stust_description` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`stust_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `schoolsia`.`students`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `schoolsia`.`students` ;
@@ -90,6 +102,7 @@ CREATE TABLE IF NOT EXISTS `schoolsia`.`students` (
   `stu_sch_id` INT NOT NULL,
   `stu_idtp_id` VARCHAR(4) NOT NULL,
   `stu_ge_id` VARCHAR(2) NOT NULL,
+  `stu_stust_id` VARCHAR(2) NOT NULL,
   `stu_name` VARCHAR(45) NOT NULL,
   `stu_lastname` VARCHAR(45) NOT NULL,
   `stu_stratum` MEDIUMINT(3) NOT NULL,
@@ -120,6 +133,11 @@ CREATE TABLE IF NOT EXISTS `schoolsia`.`students` (
     FOREIGN KEY (`stu_ge_id`)
     REFERENCES `schoolsia`.`gender` (`ge_id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_students_student_state1`
+    FOREIGN KEY (`stu_stust_id`)
+    REFERENCES `schoolsia`.`student_state` (`stust_id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -130,6 +148,8 @@ CREATE INDEX `idx_stu_sch_id` ON `schoolsia`.`students` (`stu_sch_id` ASC) VISIB
 CREATE INDEX `idx_stu_idtp_id` ON `schoolsia`.`students` (`stu_idtp_id` ASC) VISIBLE;
 
 CREATE INDEX `idx_stu_ge_id` ON `schoolsia`.`students` (`stu_ge_id` ASC) VISIBLE;
+
+CREATE INDEX `fk_students_student_state1_idx` ON `schoolsia`.`students` (`stu_stust_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -203,6 +223,20 @@ CREATE INDEX `idx_sche_sch_id` ON `schoolsia`.`schedules` (`sche_sch_id` ASC) VI
 
 
 -- -----------------------------------------------------
+-- Table `schoolsia`.`academic_periods`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `schoolsia`.`academic_periods` ;
+
+CREATE TABLE IF NOT EXISTS `schoolsia`.`academic_periods` (
+  `acpe_id` INT NOT NULL,
+  `acpe_date_ini` DATE NOT NULL,
+  `acpe_date_end` DATE NOT NULL,
+  `acpe_num` INT NOT NULL,
+  PRIMARY KEY (`acpe_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `schoolsia`.`subject_time`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `schoolsia`.`subject_time` ;
@@ -214,6 +248,7 @@ CREATE TABLE IF NOT EXISTS `schoolsia`.`subject_time` (
   `subtm_sch_id` INT NOT NULL,
   `subtm_sub_id` INT NOT NULL,
   `subtm_sche_id` INT NOT NULL,
+  `subtm_acpe_id` INT NOT NULL,
   `subtm_director` BINARY NOT NULL DEFAULT 0,
   PRIMARY KEY (`subtm_id`),
   CONSTRAINT `fk_subtm_tea_id`
@@ -240,6 +275,11 @@ CREATE TABLE IF NOT EXISTS `schoolsia`.`subject_time` (
     FOREIGN KEY (`subtm_sche_id`)
     REFERENCES `schoolsia`.`schedules` (`sche_id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_subtm_acpe_id`
+    FOREIGN KEY (`subtm_acpe_id`)
+    REFERENCES `schoolsia`.`academic_periods` (`acpe_id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -252,6 +292,8 @@ CREATE INDEX `idx_subtm_sch_id` ON `schoolsia`.`subject_time` (`subtm_sch_id` AS
 CREATE INDEX `idx_subtm_sub_id` ON `schoolsia`.`subject_time` (`subtm_sub_id` ASC) VISIBLE;
 
 CREATE INDEX `idx_subtm_sche_id` ON `schoolsia`.`subject_time` (`subtm_sche_id` ASC) VISIBLE;
+
+CREATE INDEX `idx_subtm_acpe_id` ON `schoolsia`.`subject_time` (`subtm_acpe_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -387,6 +429,27 @@ CREATE INDEX `idx_stdr_stu_id` ON `schoolsia`.`student_result` (`stdr_stu_id` AS
 CREATE INDEX `idx_stdr_sub_id` ON `schoolsia`.`student_result` (`stdr_sub_id` ASC) VISIBLE;
 
 
+-- -----------------------------------------------------
+-- Table `schoolsia`.`monthly_payment`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `schoolsia`.`monthly_payment` ;
+
+CREATE TABLE IF NOT EXISTS `schoolsia`.`monthly_payment` (
+  `monpay_id` INT NOT NULL,
+  `monpay_stu_id` INT NOT NULL,
+  `monpay_state` BINARY NOT NULL DEFAULT 0,
+  `monpay_month` DATE NOT NULL,
+  PRIMARY KEY (`monpay_id`),
+  CONSTRAINT `fk_monthly_payment_students1`
+    FOREIGN KEY (`monpay_stu_id`)
+    REFERENCES `schoolsia`.`students` (`stu_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_monthly_payment_students1_idx` ON `schoolsia`.`monthly_payment` (`monpay_stu_id` ASC) VISIBLE;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -412,6 +475,19 @@ USE `schoolsia`;
 INSERT INTO `schoolsia`.`gender` (`ge_id`, `ge_name`) VALUES ('H', 'Hombre');
 INSERT INTO `schoolsia`.`gender` (`ge_id`, `ge_name`) VALUES ('I', 'Intersexual');
 INSERT INTO `schoolsia`.`gender` (`ge_id`, `ge_name`) VALUES ('M', 'Mujer');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `schoolsia`.`student_state`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `schoolsia`;
+INSERT INTO `schoolsia`.`student_state` (`stust_id`, `stust_description`) VALUES ('AC', 'Active enrolled');
+INSERT INTO `schoolsia`.`student_state` (`stust_id`, `stust_description`) VALUES ('SP', 'Signed up');
+INSERT INTO `schoolsia`.`student_state` (`stust_id`, `stust_description`) VALUES ('RE', 'Retired');
+INSERT INTO `schoolsia`.`student_state` (`stust_id`, `stust_description`) VALUES ('GD', 'Graduated');
 
 COMMIT;
 
