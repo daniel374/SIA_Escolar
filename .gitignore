@@ -1,0 +1,5 @@
+# Python bytecode
+*.py[cod]
+
+# Editor's cache
+*.idea

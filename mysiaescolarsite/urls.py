@@ -21,5 +21,5 @@ urlpatterns = [
     
     #mis rutas
     path('actividades_ludicas/', include('Modulos.actividades_ludicas.urls'))
-    path('', include('student_management_app.urls')),
+    #path('', include('student_management_app.urls')),
 ]
